@@ -1,0 +1,2 @@
+# NetCoreWebAPI
+.NetCore Web Application.

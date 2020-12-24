@@ -6,11 +6,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using NetCoreWebAPI.Data;
+using NetCoreWebAPI.Services;
 
 namespace NetCoreWebAPI
 {
@@ -30,6 +33,12 @@ namespace NetCoreWebAPI
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "NetCoreWebAPI", Version = "v1"});
+            });
+
+            services.AddScoped<ICompanyService, CompanyService>();
+            services.AddDbContext<MasterDbContext>(options =>
+            {
+                options.UseSqlite("Data Source=routine.db");
             });
         }
 

@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using NetCoreWebAPI.Data;
 using NetCoreWebAPI.Services;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace NetCoreWebAPI
 {
@@ -34,11 +35,15 @@ namespace NetCoreWebAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "NetCoreWebAPI", Version = "v1"});
             });
-
-            services.AddScoped<ICompanyService, CompanyService>();
-            services.AddDbContext<MasterDbContext>(options =>
+            
+            //注入EF Core数据库上下文服务
+            services.AddDbContext<MainDbContext>(dbContextOptions =>
             {
-                options.UseSqlite("Data Source=routine.db");
+                dbContextOptions.UseMySql(
+                    "server=localhost;user=root;password=123456;database=drfinder",
+                    new MySqlServerVersion(new Version(8, 0, 12)),
+                    mysqlOptions => mysqlOptions.CharSetBehavior(CharSetBehavior.NeverAppend)
+                ).EnableSensitiveDataLogging().EnableDetailedErrors();
             });
         }
 
